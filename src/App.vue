@@ -39,13 +39,9 @@ import { RouterView } from 'vue-router';
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 var axios = require('axios');
-
 import NewChatItemButton from '@/components/NewChatItemButton.vue';
-
 const route = useRoute();
-
 const custom_footer = ref(null);
-
 const input_data = ref('');
 
 // 渲染localStorage中的聊天列表
@@ -63,7 +59,7 @@ const handleAfterLeave = () => {
   // 当侧边栏收起后，将底部栏向左移动
   custom_footer.value.$el.style.left = '20px';
 };
-
+// 获取接口回复
 const getChatData = async () => {
   var send_data = JSON.stringify({
     "model": "gpt-3.5-turbo",
@@ -75,7 +71,8 @@ const getChatData = async () => {
     ],
     "temperature": 0.7
   });
-  // 发送聊天数据
+
+  // 配置请求
   var config = {
     method: 'post',
     url: 'https://api.chatanywhere.com.cn/v1/chat/completions',
@@ -85,33 +82,51 @@ const getChatData = async () => {
     },
     data: send_data
   };
-  axios(config)
-    .then(function (response) {
-      console.log(JSON.stringify(response.data));
-      return response.data;
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  // console.log(input_data.value);
-};
 
-const handleRequest = () => {
+  try {
+    const response = await axios(config);
+    console.log(JSON.stringify(response.data));
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null; // 返回null表示出错
+  }
+};
+const handleRequest = async () => {
   // 处理页面请求
   console.log(input_data.value);
-  let message = getChatData();
-  console.log(message);
-  let pre_data = JSON.parse(window.localStorage.getItem(route.query.id));
-  pre_data['messages'].push({
-    role: 'user',
-    content: input_data.value
-  });
-  // pre_data['messages'].push({
-  //   role: 'chatbot',
-  //   content: message['choices'][0]['message']['content']
-  // });
-  window.localStorage.setItem(route.query.id, JSON.stringify(pre_data));
+
+  // 等待getChatData函数执行完毕并获取返回值
+  let message = await getChatData();
+
+  if (message) {
+    let pre_data = JSON.parse(window.localStorage.getItem(route.query.id));
+
+    // 添加用户消息
+    pre_data['messages'].push({
+      role: '你 🤔',
+      content: input_data.value
+    });
+
+    // 添加chatbot消息
+    pre_data['messages'].push({
+      role: 'GPT 🫣',
+      content: message['choices'][0]['message']['content']
+    });
+
+    // 更新localStorage
+    window.localStorage.setItem(route.query.id, JSON.stringify(pre_data));
+
+    // 发送事件
+    // ...
+    const event = new CustomEvent('updateChatView', { detail: pre_data });
+    window.dispatchEvent(event);
+    input_data.value = ""
+  } else {
+    console.log('Failed to get chat data');
+  }
 };
+
 
 onMounted(() => {
   // Code to run after component is mounted

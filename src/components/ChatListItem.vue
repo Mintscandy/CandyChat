@@ -52,7 +52,9 @@ export default defineComponent({
             {
                 label: '删除该聊天',
                 key: 'delete',
-                style: "color: red"
+                style: {
+                    color: 'red'
+                }
             }
         ];
 
@@ -66,12 +68,14 @@ export default defineComponent({
                 console.log('delete');
                 if (props.chatId) {
                     window.localStorage.removeItem(props.chatId);
+                    // 重新加载页面
                     window.location.reload();
                 }
             }
         };
 
         const handleTitleChange = () => {
+            // 修改title
             title.value = newtitle.value;
             if (props.chatId){
                 window.localStorage.setItem(props.chatId, JSON.stringify({ id: props.chatId, title: newtitle.value, messages: [] }));
