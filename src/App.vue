@@ -5,7 +5,6 @@
         v-if="HeaderisCollapsed">
         <n-h3 style="margin: 0px;">CandyChat</n-h3>
       </n-layout-header>
-      <!-- copyToClipboard -->
       <n-layout position="absolute" :style="HeaderisCollapsed ? 'top: 64px;' : 'top: 0px;'" has-sider>
         <n-layout-sider :on-after-enter="handleAfterEnter" :on-after-leave="handleAfterLeave" collapse-mode="width"
           :collapsed-width="20" :width="240" :show-collapsed-content="false" show-trigger="arrow-circle"
@@ -21,20 +20,29 @@
           <n-input :disabled="!isInputDisabled" size="large" placeholder="请输入内容" style="width: 40%;text-align: left;"
             v-model:value="input_data" :status="isRequestError ? 'error' : 'success'" @keyup.enter="handleRequest()">
             <template #suffix>
-              <n-icon size="20">
-                <svg t="1714905595925" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg" p-id="12163" width="200" height="200">
-                  <path
-                    d="M485.734 76.86c-235.218 0-425.578 165.593-425.578 369.859 0 125.328 72.735 236.765 182.61 304.828v114.531c0 15.469 10.828 24.75 23.218 24.75 4.641 0 9.297-1.531 12.375-3.094l116.063-77.375c29.422 6.188 58.812 7.75 89.765 7.75 235.22 0 425.563-165.593 425.563-369.859 1.566-205.797-188.778-371.39-424.016-371.39z m0 679.346c-26.312 0-52.625-3.094-78.921-7.75l-12.391-3.094c-7.735-1.53-15.469 0-23.219 4.657l-10.812 7.718-55.72 37.157V734.55c0-10.844-6.187-21.688-15.468-26.313l-15.484-9.28C177.766 641.674 120.516 547.3 120.516 448.252c0-170.219 162.5-307.937 363.671-307.937 201.188 0 363.657 137.718 363.657 307.937 1.565 168.672-162.466 307.953-362.11 307.953zM244.313 457.531c0 28.219 22.859 51.078 51.078 51.078 28.203 0 51.062-22.859 51.062-51.078 0-28.172-22.86-51.047-51.062-51.047-28.22 0-51.079 22.875-51.079 51.047z m193.453 0c0 28.219 22.859 51.078 51.062 51.078s51.078-22.859 51.078-51.078c0-28.172-22.875-51.047-51.078-51.047s-51.062 22.875-51.062 51.047z m187.234 0c0 28.219 22.875 51.078 51.063 51.078 28.218 0 51.093-22.859 51.093-51.078 0-28.172-22.875-51.047-51.093-51.047-28.188 0-51.063 22.875-51.063 51.047z m293.128 79.957c-0.912-1.152-1.872-2.256-2.816-3.408-6.656 25.28-16.16 49.632-28.128 72.752 0.496 1.12 1.12 2.192 1.6 3.312 8.096 18.624 12.496 38.752 12.496 59.744 0 55.664-32.16 108.688-86.064 140.848l-8.688 5.216c-5.216 2.592-8.72 8.688-8.72 14.784V864.64l-31.28-20.88-6.096-4.336c-4.336-2.592-8.688-3.472-13.024-2.592l-6.944 1.712c-14.816 2.656-29.6 4.336-44.336 4.336-35.44 0-68.816-7.84-97.936-21.504-28.912 6.752-58.912 11.008-89.808 12.464 48.4 41.712 115.008 67.504 188.592 67.504 19.504 0 38-0.976 56.496-4.848l73.056 48.688c1.936 0.976 4.848 1.936 7.744 1.936 7.808 0 14.624-5.84 14.624-15.568v-72.096c69.152-42.848 114.944-112.976 114.944-191.84 0-48.192-16.848-92.976-45.712-130.128z"
-                    fill="#727272" p-id="12164"></path>
-                </svg>
-              </n-icon>
+              <n-popselect v-model:value="currentModel" :options="ModelOptions" trigger="click"
+                @update:value="changeCurrentModel">
+                <n-icon size="20">
+                  <svg t="1718522734896" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                    xmlns="http://www.w3.org/2000/svg" p-id="9155" width="200" height="200">
+                    <path
+                      d="M569.005837 140.456674l99.024593 200.638691a63.586736 63.586736 0 0 0 47.953798 34.782488l221.322762 32.192984c52.157748 7.5767 72.969696 71.674943 35.166119 108.455506l-160.133716 156.137566a63.586736 63.586736 0 0 0-18.286382 56.281775l37.819562 220.58747c8.903422 51.933963-45.604062 91.5438-92.263107 67.023426l-198.033201-104.171634a63.586736 63.586736 0 0 0-59.143018 0l-198.06517 104.107695c-46.643061 24.520375-101.166529-15.089462-92.263108-67.023425l37.819562-220.587471a63.586736 63.586736 0 0 0-18.286381-56.281774l-160.21364-156.169536c-37.739639-36.764578-16.911706-100.878806 35.166119-108.455506l221.402685-32.176999a63.586736 63.586736 0 0 0 47.953798-34.782488l99.024593-200.638691c23.32153-47.202522 90.712601-47.202522 114.034132 0.079923z"
+                      fill="#FFE000" p-id="9156"></path>
+                    <path
+                      d="M552.269961 323.911921l50.831026 102.908851a44.916724 44.916724 0 0 0 33.823413 24.568329l113.490655 16.496106c36.764578 5.354841 51.550333 50.623226 24.888021 76.614185l-82.176825 80.098827a44.916724 44.916724 0 0 0-12.915556 39.753699l19.405303 113.09104c6.297932 36.764578-32.224952 64.673689-65.169211 47.346383l-101.566145-53.404546a44.916724 44.916724 0 0 0-41.799727 0l-101.566144 53.404546c-32.960244 17.327306-71.467144-10.661728-65.169211-47.346383l19.405303-113.09104a44.916724 44.916724 0 0 0-12.915556-39.753699l-82.176825-80.098827c-26.662312-25.990959-11.95648-71.259344 24.888021-76.614185l113.490655-16.496106a44.916724 44.916724 0 0 0 33.839397-24.568329l50.783072-102.892866c16.528076-33.391828 64.130213-33.391828 80.610334-0.015985z"
+                      fill="#FFFF00" p-id="9157"></path>
+                    <path
+                      d="M512.452325 96.115396m-96.115396 0a96.115396 96.115396 0 1 0 192.230791 0 96.115396 96.115396 0 1 0-192.230791 0Z"
+                      fill="#E8E8E8" p-id="9158"></path>
+                    <path
+                      d="M450.000495 89.082172a82.816209 74.456264 90 1 0 148.912527 0 82.816209 74.456264 90 1 0-148.912527 0Z"
+                      fill="#F7F7F7" p-id="9159"></path>
+                  </svg>
+                </n-icon>
+              </n-popselect>
             </template>
           </n-input>
-          <n-popselect style="margin-left: auto !important;" v-model:value="value" :options="ModelOptions"
-            trigger="click" @update:value="changeCurrentModel">
-            <n-button>{{ currentModel }}</n-button>
-          </n-popselect>
+
         </n-layout-footer>
       </n-layout>
     </n-layout>
@@ -45,6 +53,9 @@ import { ref, onMounted, reactive } from 'vue';
 import ChatListItem from '@/components/ChatListItem.vue';
 import { RouterView } from 'vue-router';
 import { useRoute } from 'vue-router';
+import { v4 as uuidv4 } from 'uuid';
+import { validate as uuidv4v } from 'uuid';
+
 var axios = require('axios');
 import NewChatItemButton from '@/components/NewChatItemButton.vue';
 const route = useRoute();
@@ -54,14 +65,7 @@ const isInputDisabled = ref(true);
 const isRequestError = ref(false);
 const HeaderisCollapsed = ref(true);
 const currentModel = ref('gpt-3.5-turbo-1106');
-const ModelOptions = ref([{
-  label: 'gpt-3.5-turbo-1106',
-  value: 'gpt-3.5-turbo-1106'
-},
-{
-  label: 'gpt-3.5-turbo-0125',
-  value: 'gpt-3.5-turbo-0125'
-},
+const ModelOptions = ref([
 {
   label: 'gpt-3.5-turbo',
   value: 'gpt-3.5-turbo'
@@ -69,10 +73,6 @@ const ModelOptions = ref([{
 {
   label: 'gpt-4o',
   value: 'gpt-4o'
-},
-{
-  label: 'gpt-4o-2024-05-13',
-  value: 'gpt-4o-2024-05-13'
 }
 ]);
 
@@ -80,6 +80,9 @@ const ModelOptions = ref([{
 const chatList = ref([]);
 for (let i = 0; i < localStorage.length; i++) {
   let key = localStorage.key(i);
+  if (uuidv4v(key) === false) {
+    continue;
+  }
   chatList.value.push(JSON.parse(localStorage.getItem(key)));
 }
 
@@ -99,6 +102,8 @@ const isMobile = () => {
 
 const changeCurrentModel = (value, option) => {
   currentModel.value = value;
+  console.log(currentModel.value);
+
 }
 
 // 获取接口回复
